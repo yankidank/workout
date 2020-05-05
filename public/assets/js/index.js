@@ -53,10 +53,6 @@ $('#addExerciseButton').click(function() {
   //console.log( "addExerciseButton called." );
   var formObject = {};
   var exerciseName = $('#newExerciseNameInput').val();
-  var exerciseUnit = $('#newExerciseUnitInput').val();
-  var exerciseForm = $('#newExerciseFormInput').val();
-  //console.log(exerciseName+' '+exerciseUnit+' '+exerciseForm)
-
   // Arrays of Form and Unit values
   var unitArray = []
   var formArray = []
@@ -66,117 +62,41 @@ $('#addExerciseButton').click(function() {
   $(".newExerciseForm").each(function(i) {
     formArray.push(this.value)
   });
-
+  // Check if exercise input fields have values
   if (exerciseName && unitArray[0] != 0 && formArray[0] != '' ){
     console.log('Saving '+exerciseName)
+    function toObject(form, unit) {
+        var result = {};
+        for (var i = 0; i < form.length; i++)
+            result[form[i]] = unit[i];
+        return result;
+    }
+    var measureObj = toObject(formArray, unitArray);
+    formObject.measurements = []
+    formObject.measurements.push(measureObj);
+    formObject.name = exerciseName;
+    // POST New Exercise
+    $.ajax("/api/exercise", {
+      type: "POST",
+      data: formObject
+    }).then(
+      function() {
+        console.log("Created New Exercise!");
+        // Reload the page to get the updated list
+        location.reload();
+      }
+    );
   } else {
     console.log('Required exercise input field missing')
   }
-
-  function toObject(form, unit) {
-      var result = {};
-      for (var i = 0; i < form.length; i++)
-          result[form[i]] = unit[i];
-      return result;
-  }
-  var measureObj = toObject(formArray, unitArray);
-
-  formObject.measurements = []
-  formObject.measurements.push(measureObj);
-  formObject.name = exerciseName;
-
-  // Ajax POST New Exercise
-  $.ajax("/api/exercise", {
-    type: "POST",
-    data: formObject
-  }).then(
-    function() {
-      console.log("Created New Exercise!");
-      // Reload the page to get the updated list
-      location.reload();
-    }
-  );
 });
 
-$('.exerciseButton').click(function() {
+$(".exerciseButton").click(function() {
   event.preventDefault();
 });
 
-$( "#addRoutineSelect" ).change(function() {
+$("#addRoutineSelect").change(function() {
     console.log($( "#addRoutineSelect option:selected" ).data())
-})
-
-$( "#addExerciseSelect" ).change(function() {
-  // Add Exercise to Workout
-  var exerciseId = $( "#addExerciseSelect option:selected" ).data().id;
-  const workoutData = {}
-  workoutData.measurements = []
-  workoutData.measurements.push(exerciseId);
-  // POST exercise to workout
-  $.ajax("/api/workout/"+workoutId, {
-    type: "POST",
-    data: workoutData
-  }).then(
-    function() {
-      console.log(`Added ${exerciseId} to ${workoutId} `);
-      // Reload the page
-      location.reload();
-    }
-  );
-  // GET exercise data
-  $.ajax({
-    url: "api/exercise/"+exerciseId,
-    method: "GET"
-  }).then(function(response) {
-    // Return the measurements
-    const measurements = response.measurements[0];
-    // Key/value measurements saved to different arrays
-    const keyArray = [];
-    const valueArray = [];
-    for(p in measurements) {
-      keyArray.push(p)
-      valueArray.push(measurements[p])
-    }
-    //console.table(keyArray)
-    //console.table(valueArray)
-    var rowSpan = keyArray.length; 
-    var newExercise = '';
-
-    for (let index = 0; index < keyArray.length; index++) {
-      const key = keyArray[index];
-      const value = valueArray[index];
-      if (index === 0){
-        // First measurement
-        newExercise += `<tr>
-          <td rowspan="${rowSpan}">${response.name}</td>
-          <td>
-            <div class="ui form">
-              <div class="field inline">
-                <input class="tableUnit" type="number" value="${value}">
-              </div>
-            </div>
-          </td>
-          <td>${key}</td>
-        </tr>`;
-      } else {
-        // Not first measurement
-        newExercise += `<tr>
-          <td>
-            <div class="ui form">
-              <div class="field inline">
-                <input class="tableUnit" type="number" value="${value}">
-              </div>
-            </div>
-          </td>
-          <td>
-            ${key}
-          </td>
-        </tr>`;
-      }
-      console.log(value+' '+key)
-    }
-    $('#exerciseTableItems').append(newExercise);
-  });
 })
 
 // Customize Routines
@@ -222,7 +142,84 @@ $(document).ready(async function() {
       $("#newWorkoutExercises").append(content);
     });
   });
+  // Add exercises to workout
+  $("#addExerciseSelect").change(function() {
+    var exerciseId = $( "#addExerciseSelect option:selected" ).data().id;
+    //console.log(workoutResponse[0]._id)
+    const workoutData = workoutResponse[0];
+    const exercisesList = workoutData.exercises
+    exercisesList.push(exerciseId);
+    const exerciseData = {_id: workoutResponse[0]._id,  exercises: exercisesList};
+    console.log(exerciseData)
 
+    // POST exercise to workout
+    $.ajax("/api/workout/"+workoutResponse[0]._id, {
+      type: "PUT",
+      data: exerciseData
+    }).then(
+      function() {
+        console.log(`Added ${exerciseId} to ${workoutResponse[0]._id} `);
+        // Reload the page
+        location.reload();
+      }
+    );
+    // GET exercise data
+    $.ajax({
+      url: "api/exercise/"+exerciseId,
+      method: "GET"
+    }).then(function(response) {
+      // Return the measurements
+      const measurements = response.measurements[0];
+      // Key/value measurements saved to different arrays
+      const keyArray = [];
+      const valueArray = [];
+      for(p in measurements) {
+        keyArray.push(p)
+        valueArray.push(measurements[p])
+      }
+      //console.table(keyArray)
+      //console.table(valueArray)
+      var rowSpan = keyArray.length; 
+      var newExercise = '';
+
+      for (let index = 0; index < keyArray.length; index++) {
+        const key = keyArray[index];
+        const value = valueArray[index];
+        if (index === 0){
+          // First measurement
+          newExercise += `<tr>
+            <td rowspan="${rowSpan}">${response.name}</td>
+            <td>
+              <div class="ui form">
+                <div class="field inline">
+                  <input class="tableUnit" type="number" value="${value}">
+                </div>
+              </div>
+            </td>
+            <td>${key}</td>
+          </tr>`;
+        } else {
+          // Not first measurement
+          newExercise += `<tr>
+            <td>
+              <div class="ui form">
+                <div class="field inline">
+                  <input class="tableUnit" type="number" value="${value}">
+                </div>
+              </div>
+            </td>
+            <td>
+              ${key}
+            </td>
+          </tr>`;
+        }
+        console.log(value+' '+key)
+      }
+      $('#exerciseTableItems').append(newExercise);
+    });
+  })
+
+  // Add button to end workout
   if(!workoutResponse[0].date_end){
     var endButton = `<button class="ui labeled icon red button right floated" id="endWorkoutButton" type="submit">
         <i class="icon stopwatch"></i>

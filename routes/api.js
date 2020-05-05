@@ -1,18 +1,21 @@
 const router = require("express").Router();
-const Transaction = require("../models/exercise.js");
+const Exercise = require("../models/exercise.js");
+const Routine = require("../models/routine.js");
+const Workout = require("../models/workout.js");
 
 /* 
 ROUTES: 
   GET workouts    // Previous workout
   GET workouts/:id// Returns sepcific workout
   POST exercise   // Add new
-  PUT exercis/:id // Modify
+  PUT exercise/:id // Modify
   POST routine    // Add new
   PUT routine/:id // Modify
                   // When a routine is modified, create a clone and switch to it 
 */
+
 router.post("/api/exercise", ({ body }, res) => {
-  Transaction.create(body)
+  Exercise.create(body)
     .then(dbTransaction => {
       res.json(dbTransaction);
     })
@@ -21,8 +24,8 @@ router.post("/api/exercise", ({ body }, res) => {
     });
 });
 
-router.post("/api/transaction/bulk", ({ body }, res) => {
-  Transaction.insertMany(body)
+router.post("/api/routine", ({ body }, res) => {
+  Routine.create(body)
     .then(dbTransaction => {
       res.json(dbTransaction);
     })
@@ -31,8 +34,50 @@ router.post("/api/transaction/bulk", ({ body }, res) => {
     });
 });
 
-router.get("/api/transaction", (req, res) => {
-  Transaction.find({})
+router.post("/api/workout", ({ body }, res) => {
+  Workout.create(body)
+    .then(dbTransaction => {
+      res.json(dbTransaction);
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    });
+});
+
+router.post("/api/exercise/bulk", ({ body }, res) => {
+  Exercise.insertMany(body)
+    .then(dbTransaction => {
+      res.json(dbTransaction);
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    });
+});
+
+router.get("/api/workout", (req, res) => {
+  Workout.find({})
+    .sort({ date: -1 })
+    .then(dbTransaction => {
+      res.json(dbTransaction);
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    });
+});
+
+router.get("/api/exercise", (req, res) => {
+  Exercise.find({})
+    .sort({ date: -1 })
+    .then(dbTransaction => {
+      res.json(dbTransaction);
+    })
+    .catch(err => {
+      res.status(400).json(err);
+    });
+});
+
+router.get("/api/routine", (req, res) => {
+  Routine.find({})
     .sort({ date: -1 })
     .then(dbTransaction => {
       res.json(dbTransaction);

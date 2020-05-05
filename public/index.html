@@ -31,93 +31,7 @@
             <th>Form</th>
           </tr>
       </thead>
-        <tbody id="exerciseTableItems">
-          <!--
-          <tr>
-            <td class="aligned center" rowspan="3">Bench Press</td>
-            <td>
-              <div class="ui form">
-                <div class="field inline">
-                  <input class="tableUnit" type="number" value="3">
-                </div>
-              </div>
-            </td>
-            <td>sets</td>
-          </tr>
-          <tr>
-            <td>
-              <div class="ui form">
-                <div class="field inline">
-                  <input class="tableUnit" type="number" value="5">
-                </div>
-              </div>
-            </td>
-            <td>reps</td>
-          </tr>
-          <tr>
-            <td>
-              <div class="ui form">
-                <div class="field inline">
-                  <input class="tableUnit" type="number" value="135">
-                </div>
-              </div>
-            </td>
-            <td>lbs</td>
-          </tr>
-          <tr>
-            <td rowspan="3">Squats</td>
-            <td>
-              <div class="ui form">
-                <div class="field inline">
-                  <input class="tableUnit" type="number" value="3">
-                </div>
-              </div>
-            </td>
-            <td>sets</td>
-          </tr>
-          <tr>
-            <td>
-              <div class="ui form">
-                <div class="field inline">
-                  <input class="tableUnit" type="number" value="12">
-                </div>
-              </div>
-            </td>
-            <td>reps</td>
-          </tr>
-          <tr>
-            <td>
-              <div class="ui form">
-                <div class="field inline">
-                  <input class="tableUnit" type="number" value="125">
-                </div>
-              </div>
-            </td>
-            <td>lbs</td>
-          </tr>
-          <tr>
-            <td rowspan="2">Swimming</td>
-            <td>
-              <div class="ui form">
-                <div class="field inline">
-                  <input class="tableUnit" type="number" value="12">
-                </div>
-              </div>
-            </td>
-            <td>laps</td>
-          </tr>
-          <tr>
-            <td>
-              <div class="ui form">
-                <div class="field inline">
-                  <input class="tableUnit" type="number" value="76">
-                </div>
-              </div>
-            </td>
-            <td>seconds</td>
-          </tr>
-        -->
-        </tbody>
+        <tbody id="exerciseTableItems"></tbody>
       </table>
       <form class="ui form" id="addCurrentForm">
         <div class="two fields">
@@ -193,11 +107,12 @@
               <i class="icon save"></i>
               Save Exercise
             </button>  
+            <!--
             <button class="ui labeled icon button right floated" id="addFieldButton">
               <i class="icon add"></i>
               More Fields
             </button>
-            
+            -->
             <br />
             <br />
 
@@ -208,14 +123,14 @@
 
     <br />
 
-    <div class="ui text container">
+    <div class="ui text container" id="manageRoutines">
       <h4 class="ui top attached block header">
         Manage Routines
       </h4>
       <div class="ui bottom attached segment">
         <form class="ui form" id="addWorkoutForm">
           <div class="two fields">
-            <div class="field">
+            <div class="disabled field">
               <label>Routine</label>
               <select class="ui search fluid dropdown" id="routineSelected">
                 <option value="">Search or Select</option>
@@ -226,7 +141,7 @@
                 <option value="5" data-id="5">Swimming</option>
               </select>
             </div>
-            <div class="field">
+            <div class="disabled field">
               <label>Exercises</label>
               <select class="ui multiple search fluid dropdown" id="newWorkoutExercises">
                 <option value="">Excercises</option>
@@ -252,37 +167,6 @@
             </div>
           </div>
         </form>
-        <!--
-        <div class="ui text container">
-          <form class="ui form" id="addRoutineForm">
-            <div class="two fields">
-              <div class="field">
-                <select class="ui fluid dropdown" id="routineSelect">
-                  <option value="">Select Routine</option>
-                  <option data-id="1" value="1">Cardio</option>
-                  <option data-id="2" value="2">Arms</option>
-                  <option data-id="3" value="3">Legs</option>
-                  <option data-id="4" value="4">Abs</option>
-                </select>
-              </div>
-              <div class="field" id="routineExercises">
-                <button class="tiny ui labeled icon red button exerciseButton" data-id="1">
-                  <i class="icon remove"></i>
-                  Swimming | 12 laps | 76 seconds
-                </button>
-                <button class="tiny ui labeled icon red button exerciseButton" data-id="2">
-                  <i class="icon remove"></i>
-                  Squats | 3 sets | 12 reps | 125 lbs
-                </button>
-                <button class="tiny ui labeled icon red button exerciseButton" data-id="3">
-                  <i class="icon remove"></i>
-                  Bench Press | 3 sets | 5 reps | 135 lbs
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-        -->
       </div>
     </div>
 

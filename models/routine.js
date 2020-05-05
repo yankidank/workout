@@ -11,6 +11,6 @@ const routineSchema = new Schema({
   exercises: Array
 });
 
-const routine = mongoose.model("routine", routineSchema);
+const Routine = mongoose.model("Routine", routineSchema);
 
-module.exports = routine;
+module.exports = Routine;

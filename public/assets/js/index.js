@@ -53,31 +53,24 @@ var measurementData = [];
 $('#addExerciseButton').click(function() {
   event.preventDefault();
   //console.log( "addExerciseButton called." );
-
   var formObject = {};
-  
   var exerciseName = $('#newExerciseName').val();
-  if (exerciseName){
-    console.log(exerciseName)
-  } else {
-    console.log('Exercise Name Not Provided')
-  }
 
-  var unitId 
-  var unitTitle
-  var formId
-  var formTitle
+  // Arrays of Form and Unit values
   var unitArray = []
   var formArray = []
-
-  // Create array of Form, Unit
   $(".newExerciseUnit").each(function(i) {
     unitArray.push(Number(this.value))
   });
-  // Create array of Form, Unit
   $(".newExerciseForm").each(function(i) {
     formArray.push(this.value)
   });
+
+  if (exerciseName && unitArray[0] != 0 && formArray[0] != '' ){
+    console.log('Saving '+exerciseName)
+  } else {
+    console.log('Required exercise input field missing')
+  }
 
   var unitId = $(".newExerciseUnit").data().id;
   var unitTitle = $(".newExerciseUnit").val();
@@ -127,56 +120,7 @@ $( "#routineSelect" ).change(function() {
 
 // Create a new workout, or continue last workout.
 
-
 // Add exercises to a previous workout plan.
-/*
-VIEWS: Exercise, Workout Plans, Home/Current Routine
-
-ROUTES: 
-  GET workouts    // Previous workout
-  GET workouts/:id// Returns sepcific workout
-  POST exercise   // Add new
-  PUT exercis/:id // Modify
-  POST routine    // Add new
-  PUT routine/:id // Modify
-                  // When a routine is modified, create a clone and switch to it 
-  
-
-routines: // Group into repeatable routines
-[
-  {
-    id: INTEGER,
-    name: STRNG,
-    exercises: [1,2,3,4]
-  }
-]
-exercises: // Details of exercise (name, format, measurement)
-[ 
-  {
-    id: INTEGER,
-    name: String, // Bench Press
-    measurements:
-    [
-      {
-        unit: INT, // 10 reps
-        form: STRING // repetitions, miles, laps, minutes, etc
-      },
-      {
-        unit: INT,
-        form: STRING
-      }
-    ]
-  }
-]
-workout: // Track the data
-[
-  {
-    id: INT,
-    timesamp: Date, // Log the time of post
-    exercises: [1,2,3]
-  }
-]
-*/
 
 /* 
 // Return current workout

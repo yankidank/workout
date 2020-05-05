@@ -3,19 +3,6 @@
 // const momentTimer = moment("2020-05-04T16:47:11-07:00").fromNow(); // Store and get the time for each workout
 // $("#momentTimer").html('started '+momentTimer);
 
-const newExercise = `<tr>
-<td rowspan="2">Running</td>
-<td>
-  <div class="ui form">
-    <div class="field inline">
-      <input class="tableUnit" type="number" value="12">
-    </div>
-  </div>
-</td>
-<td>laps</td>
-</tr>`;
-
-
 $('.ui.dropdown').dropdown();
 $('select.dropdown').dropdown();
 
@@ -89,21 +76,14 @@ $('#addExerciseButton').click(function() {
   }
   console.log(newarray)
 */
-
   //measurementData.push({unit: unitTitle, form: formTitle})
-
   formObject.measurements = [...measurementData];
-
   formObject.name = exerciseName;
   //console.table(formObject.measurements);
 });
 $('.exerciseButton').click(function() {
   event.preventDefault();
 });
-
-
-// Sample to add an Exercise
-$('#exerciseTableItems').append(newExercise);
 
 $( "#addRoutineSelect" ).change(function() {
     console.log($( "#addRoutineSelect option:selected" ).data())
@@ -117,9 +97,25 @@ $( "#addExerciseSelect" ).change(function() {
 $( "#routineSelect" ).change(function() {
   console.log($( "#routineSelect option:selected" ).val())
 })
+routineSelected
 
 // On page load
 $(document).ready(function() {
+    
+  // Sample to add an Exercise
+  const newExercise = `<tr>
+  <td rowspan="2">Running</td>
+  <td>
+    <div class="ui form">
+      <div class="field inline">
+        <input class="tableUnit" type="number" value="12">
+      </div>
+    </div>
+  </td>
+  <td>laps</td>
+  </tr>`;
+  $('#exerciseTableItems').append(newExercise);
+
   // Return routines
   $.ajax({
     url: "api/routine",
@@ -130,6 +126,7 @@ $(document).ready(function() {
       console.log(element.name)
       var content = `<option data-id="${element._id}" value="${element._id}">${element.name}</option>`;
       $("#addRoutineSelect").append(content);
+      $("#routineSelected").append(content);
     });
   });
   // Return Exercises
@@ -142,6 +139,7 @@ $(document).ready(function() {
       console.log(element.name)
       var content = `<option data-id="${element._id}" value="${element._id}">${element.name}</option>`;
       $("#addExerciseSelect").append(content);
+      $("#newWorkoutExercises").append(content);
     });
   });
 });

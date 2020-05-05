@@ -69,15 +69,15 @@
             <div class="fields">
               <div class="six wide field">
                 <label>Name</label>
-                <input type="text" id="newExerciseName" placeholder="Exercise Name">
+                <input type="text" id="newExerciseNameInput" placeholder="Exercise Name">
               </div>
               <div class="six wide field">
                 <label>Unit</label>
-                <input type="number" class="newExerciseUnit" data-id="1" placeholder="#">
+                <input type="number" class="newExerciseUnit" id="newExerciseUnitInput" placeholder="#">
               </div>
               <div class="four wide field">
                 <label>Form</label>
-                <input type="text" class="newExerciseForm" data-id="1" placeholder="Reps, laps, miles">
+                <input type="text" class="newExerciseForm" id="newExerciseFormInput" placeholder="Reps, laps, miles">
               </div>
             </div>
             <div id="insertFields"></div>
@@ -85,12 +85,10 @@
               <i class="icon save"></i>
               Save Exercise
             </button>  
-            <!--
             <button class="ui labeled icon button right floated" id="addFieldButton">
               <i class="icon add"></i>
               More Fields
             </button>
-            -->
             <br />
             <br />
 

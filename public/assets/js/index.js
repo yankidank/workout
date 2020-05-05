@@ -35,13 +35,14 @@ $('#addFieldButton').click(function() {
   $('#insertFields').append(moreFields);
 });
 
-var measurementData = [];
-
 $('#addExerciseButton').click(function() {
   event.preventDefault();
   //console.log( "addExerciseButton called." );
   var formObject = {};
-  var exerciseName = $('#newExerciseName').val();
+  var exerciseName = $('#newExerciseNameInput').val();
+  var exerciseUnit = $('#newExerciseUnitInput').val();
+  var exerciseForm = $('#newExerciseFormInput').val();
+  //console.log(exerciseName+' '+exerciseUnit+' '+exerciseForm)
 
   // Arrays of Form and Unit values
   var unitArray = []
@@ -59,28 +60,32 @@ $('#addExerciseButton').click(function() {
     console.log('Required exercise input field missing')
   }
 
-  var unitId = $(".newExerciseUnit").data().id;
-  var unitTitle = $(".newExerciseUnit").val();
-  var formId = $(".newExerciseForm").data().id;
-  var formTitle = $(".newExerciseForm").val();
-
-/*   
-  var newarray = [],
-      thing;
-  for(var y = 0; y < unitArray.length; y++){
-      thing = {};
-      for(var i = 0; i < formArray.length; i++){
-        thing[formArray[i]] = unitArray[y][i];
-      }
-      newarray.push(thing)
+  function toObject(form, unit) {
+      var result = {};
+      for (var i = 0; i < form.length; i++)
+          result[form[i]] = unit[i];
+      return result;
   }
-  console.log(newarray)
-*/
-  //measurementData.push({unit: unitTitle, form: formTitle})
-  formObject.measurements = [...measurementData];
+  var measureObj = toObject(formArray, unitArray);
+
+  formObject.measurements = []
+  formObject.measurements.push(measureObj);
   formObject.name = exerciseName;
-  //console.table(formObject.measurements);
+
+  // Ajax POST New Exercise
+  $.ajax("/api/exercise", {
+    type: "POST",
+    data: formObject
+  }).then(
+    function() {
+      console.log("Created New Exercise!");
+      // Reload the page to get the updated list
+      location.reload();
+    }
+  );
+
 });
+
 $('.exerciseButton').click(function() {
   event.preventDefault();
 });

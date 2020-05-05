@@ -89,7 +89,61 @@ $( "#addRoutineSelect" ).change(function() {
     console.log($( "#addRoutineSelect option:selected" ).data())
 })
 $( "#addExerciseSelect" ).change(function() {
-  console.log($( "#addExerciseSelect option:selected" ).data())
+  // Add an Exercise
+  var exerciseId = $( "#addExerciseSelect option:selected" ).data().id;
+  $.ajax({
+    url: "api/exercise/"+exerciseId,
+    method: "GET"
+  }).then(function(response) {
+    // Return the measurements
+    const measurements = response.measurements[0];
+    // Key/value measurements saved to different arrays
+    const keyArray = [];
+    const valueArray = [];
+    for(p in measurements) {
+      keyArray.push(p)
+      valueArray.push(measurements[p])
+    }
+    //console.table(keyArray)
+    //console.table(valueArray)
+    var rowSpan = keyArray.length; 
+    var newExercise = '';
+
+    for (let index = 0; index < keyArray.length; index++) {
+      const key = keyArray[index];
+      const value = valueArray[index];
+      if (index === 0){
+        // First measurement
+        newExercise += `<tr>
+          <td rowspan="${rowSpan}">${response.name}</td>
+          <td>
+            <div class="ui form">
+              <div class="field inline">
+                <input class="tableUnit" type="number" value="${value}">
+              </div>
+            </div>
+          </td>
+          <td>${key}</td>
+        </tr>`;
+      } else {
+        // Not first measurement
+        newExercise += `<tr>
+          <td>
+            <div class="ui form">
+              <div class="field inline">
+                <input class="tableUnit" type="number" value="${value}">
+              </div>
+            </div>
+          </td>
+          <td>
+            ${key}
+          </td>
+        </tr>`;
+      }
+      console.log(value+' '+key)
+    }
+    $('#exerciseTableItems').append(newExercise);
+  });
 })
 
 // Customize Routines
@@ -97,51 +151,38 @@ $( "#addExerciseSelect" ).change(function() {
 $( "#routineSelect" ).change(function() {
   console.log($( "#routineSelect option:selected" ).val())
 })
-routineSelected
 
 // On page load
 $(document).ready(function() {
-    
-  // Sample to add an Exercise
-  const newExercise = `<tr>
-  <td rowspan="2">Running</td>
-  <td>
-    <div class="ui form">
-      <div class="field inline">
-        <input class="tableUnit" type="number" value="12">
-      </div>
-    </div>
-  </td>
-  <td>laps</td>
-  </tr>`;
-  $('#exerciseTableItems').append(newExercise);
 
   // Return routines
   $.ajax({
     url: "api/routine",
     method: "GET"
   }).then(function(response) {
-    console.log(response);
+    //console.log(response);
     response.forEach(element => {
-      console.log(element.name)
+      //console.log(element.name)
       var content = `<option data-id="${element._id}" value="${element._id}">${element.name}</option>`;
       $("#addRoutineSelect").append(content);
       $("#routineSelected").append(content);
     });
   });
+
   // Return Exercises
   $.ajax({
     url: "api/exercise",
     method: "GET"
   }).then(function(response) {
-    console.log(response);
+    //console.log(response);
     response.forEach(element => {
-      console.log(element.name)
+      //console.log(element.name)
       var content = `<option data-id="${element._id}" value="${element._id}">${element.name}</option>`;
       $("#addExerciseSelect").append(content);
       $("#newWorkoutExercises").append(content);
     });
   });
+
 });
 
 

@@ -1,0 +1,37 @@
+body {
+  background-color: #F7FAFC;
+}
+
+.error {
+  color: red;
+}
+
+tbody tr td:first-child {
+  font-size:1.3rem;
+  font-weight: 600;
+}
+tr td, tbody tr td:nth-last-child(2){
+  font-size:1.1rem;
+}
+
+.ui.table {
+  text-align:center;
+}
+
+.tableUnit {
+  text-align:center;
+}
+.ui.celled.table tr td:first-child, .ui.celled.table tr th:first-child {
+  border-left: 1px solid rgba(34,36,38,.1);
+}
+#routineExercises .exerciseButton {
+  margin-bottom:7px;
+}
+#addWorkoutButton, #endWorkoutButton, #addExerciseButton, #addFieldButton{
+  margin-bottom: 12px;
+}
+.borderTop {
+  border-top: 1px dotted #d4d4d5;
+  padding-top: 6px;
+  margin-top: 9px !important;
+}

@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <meta name="theme-color" content="#317EFB" />
+    <link rel="stylesheet" href="assets/semanticui/semantic.min.css" />
+    <link rel="stylesheet" href="assets/style.css" />
+    <title>Workout Trainer</title>
+  </head>
+  <body>
+    <br />
+    <h2 class="ui center aligned header">Workout Journal</h2>
+    <div class="ui text container">
+      <h4 class="ui dividing header">Workout <span id="momentTimer"></span></h4>
+      <button class="ui labeled icon primary button right floated" id="addWorkoutButton" type="submit">
+        <i class="icon hourglass end"></i>
+        Begin New Workout
+      </button>
+      <button class="ui labeled icon red button right floated" id="endWorkoutButton" type="submit">
+        <i class="icon stopwatch"></i>
+        End Workout
+      </button>
+      <br />
+      <table class="ui celled table" id="currentWorkoutTable">
+        <thead>
+          <tr>
+            <th>Exercise</th>
+            <th>Unit</th>
+            <th>Form</th>
+          </tr>
+      </thead>
+        <tbody id="exerciseTableItems">
+          <!--
+          <tr>
+            <td class="aligned center" rowspan="3">Bench Press</td>
+            <td>
+              <div class="ui form">
+                <div class="field inline">
+                  <input class="tableUnit" type="number" value="3">
+                </div>
+              </div>
+            </td>
+            <td>sets</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ui form">
+                <div class="field inline">
+                  <input class="tableUnit" type="number" value="5">
+                </div>
+              </div>
+            </td>
+            <td>reps</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ui form">
+                <div class="field inline">
+                  <input class="tableUnit" type="number" value="135">
+                </div>
+              </div>
+            </td>
+            <td>lbs</td>
+          </tr>
+          <tr>
+            <td rowspan="3">Squats</td>
+            <td>
+              <div class="ui form">
+                <div class="field inline">
+                  <input class="tableUnit" type="number" value="3">
+                </div>
+              </div>
+            </td>
+            <td>sets</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ui form">
+                <div class="field inline">
+                  <input class="tableUnit" type="number" value="12">
+                </div>
+              </div>
+            </td>
+            <td>reps</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ui form">
+                <div class="field inline">
+                  <input class="tableUnit" type="number" value="125">
+                </div>
+              </div>
+            </td>
+            <td>lbs</td>
+          </tr>
+          <tr>
+            <td rowspan="2">Swimming</td>
+            <td>
+              <div class="ui form">
+                <div class="field inline">
+                  <input class="tableUnit" type="number" value="12">
+                </div>
+              </div>
+            </td>
+            <td>laps</td>
+          </tr>
+          <tr>
+            <td>
+              <div class="ui form">
+                <div class="field inline">
+                  <input class="tableUnit" type="number" value="76">
+                </div>
+              </div>
+            </td>
+            <td>seconds</td>
+          </tr>
+        -->
+        </tbody>
+      </table>
+      <form class="ui form" id="addCurrentForm">
+        <div class="two fields">
+          <div class="field">
+            <label>Add Routine to Workout</label>
+            <select class="ui search fluid dropdown" id="addRoutineSelect">
+              <option value="" default>Search or Select Routine</option>
+              <option data-id="1" value="1">Cardio</option>
+              <option data-id="2" value="2">Arms</option>
+              <option data-id="3" value="3">Legs</option>
+              <option data-id="4" value="4">Abs</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Add Exercise to Workout</label>
+            <select class="ui search fluid dropdown" id="addExerciseSelect">                
+              <option value="">Search or Select Excercises</option>
+              <option data-id="1" value="1">Running</option>
+              <option data-id="2" value="2">Walking</option>
+              <option data-id="3" value="3">Biking</option>
+              <option data-id="4" value="4">Rowing</option>
+              <option data-id="5" value="5">Swimming</option>
+              <option data-id="6" value="6">Bench Press</option>
+              <option data-id="7" value="7">Bent-Over Row</option>
+              <option data-id="8" value="8">Bicep Curls</option>
+              <option data-id="9" value="9">Push-ups</option>
+              <option data-id="10" value="10">Shoulder Shrugs</option>
+              <option data-id="11" value="11">Tricep Dips</option>
+              <option data-id="12" value="12">Crunches</option>
+              <option data-id="13" value="13">Leg Raises</option>
+              <option data-id="14" value="14">Calf Raises</option>
+              <option data-id="15" value="15">Lunges</option>
+              <option data-id="16" value="16">Squats</option>
+              <option data-id="17" value="17">Jump Rope</option>
+              <option data-id="18" value="18">Jumping Jacks</option>
+            </select>
+          </div>
+        </div>
+        <!--
+        <button class="ui labeled icon green button" id="updateWorkoutButton" type="submit">
+          <i class="icon circle outline"></i>
+          Save Workout Progress
+        </button>
+        -->
+      </form>
+    </div>  
+
+    <br />
+
+    <div class="ui text container">
+      <h4 class="ui top attached block header">
+        Create a New Exercise
+      </h4>
+      <div class="ui bottom attached segment">
+        <form id="addExerciseForm">
+          <div class="ui form">
+            <div class="fields">
+              <div class="six wide field">
+                <label>Name</label>
+                <input type="text" id="newExerciseName" placeholder="Exercise Name">
+              </div>
+              <div class="six wide field">
+                <label>Unit</label>
+                <input type="number" class="newExerciseUnit" data-id="1" placeholder="#">
+              </div>
+              <div class="four wide field">
+                <label>Form</label>
+                <input type="text" class="newExerciseForm" data-id="1" placeholder="Reps, laps, miles">
+              </div>
+            </div>
+            <div id="insertFields"></div>
+            <button class="ui labeled icon green button right floated" id="addExerciseButton" type="submit">
+              <i class="icon save"></i>
+              Save Exercise
+            </button>  
+            <button class="ui labeled icon button right floated" id="addFieldButton">
+              <i class="icon add"></i>
+              More Fields
+            </button>
+            
+            <br />
+            <br />
+
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <br />
+
+    <div class="ui text container">
+      <h4 class="ui top attached block header">
+        Manage Routines
+      </h4>
+      <div class="ui bottom attached segment">
+        <form class="ui form" id="addWorkoutForm">
+          <div class="two fields">
+            <div class="field">
+              <label>Routine</label>
+              <select class="ui search fluid dropdown" id="routineSelected">
+                <option value="">Search or Select</option>
+                <option value="1" data-id="1">Cardio</option>
+                <option value="2" data-id="2">Arms</option>
+                <option value="3" data-id="3">Legs</option>
+                <option value="4" data-id="4">Abs</option>
+                <option value="5" data-id="5">Swimming</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Exercises</label>
+              <select class="ui multiple search fluid dropdown" id="newWorkoutExercises">
+                <option value="">Excercises</option>
+                <option value="1">Running</option>
+                <option value="2">Walking</option>
+                <option value="3">Biking</option>
+                <option value="4">Rowing</option>
+                <option value="5">Swimming</option>
+                <option value="6">Bench Press</option>
+                <option value="7">Bent-Over Row</option>
+                <option value="8">Bicep Curls</option>
+                <option value="9">Push-ups</option>
+                <option value="10">Shoulder Shrugs</option>
+                <option value="11">Tricep Dips</option>
+                <option value="12">Crunches</option>
+                <option value="13">Leg Raises</option>
+                <option value="14">Calf Raises</option>
+                <option value="15">Lunges</option>
+                <option value="16">Squats</option>
+                <option value="17">Jump Rope</option>
+                <option value="18">Jumping Jacks</option>
+              </select>
+            </div>
+          </div>
+        </form>
+        <!--
+        <div class="ui text container">
+          <form class="ui form" id="addRoutineForm">
+            <div class="two fields">
+              <div class="field">
+                <select class="ui fluid dropdown" id="routineSelect">
+                  <option value="">Select Routine</option>
+                  <option data-id="1" value="1">Cardio</option>
+                  <option data-id="2" value="2">Arms</option>
+                  <option data-id="3" value="3">Legs</option>
+                  <option data-id="4" value="4">Abs</option>
+                </select>
+              </div>
+              <div class="field" id="routineExercises">
+                <button class="tiny ui labeled icon red button exerciseButton" data-id="1">
+                  <i class="icon remove"></i>
+                  Swimming | 12 laps | 76 seconds
+                </button>
+                <button class="tiny ui labeled icon red button exerciseButton" data-id="2">
+                  <i class="icon remove"></i>
+                  Squats | 3 sets | 12 reps | 125 lbs
+                </button>
+                <button class="tiny ui labeled icon red button exerciseButton" data-id="3">
+                  <i class="icon remove"></i>
+                  Bench Press | 3 sets | 5 reps | 135 lbs
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        -->
+      </div>
+    </div>
+
+    <br /><br />
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
+    <script src="assets/semanticui/semantic.min.js"></script>
+    <script src="assets/js/moment.min.js"></script>
+    <script src="assets/js/db.js"></script>
+    <script src="assets/js/index.js"></script>
+  </body>
+</html>

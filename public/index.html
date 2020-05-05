@@ -13,12 +13,19 @@
     <br />
     <h2 class="ui center aligned header">Workout Journal</h2>
     <div class="ui text container">
-      <h4 class="ui dividing header">Workout <span id="momentTimer"></span></h4>
-      <button class="ui labeled icon primary button right floated" id="addWorkoutButton" type="submit">
-        <i class="icon hourglass end"></i>
-        Begin New Workout
-      </button>
-      <div id="endWorkout"></div>
+      <div class="two fields">
+        <div class="field">
+          <h4 class="ui header" id="momentTimer"></h4>
+        </div>
+        <div class="field">
+          <button class="ui labeled icon primary button right floated" id="addWorkoutButton" type="submit">
+            <i class="icon hourglass end"></i>
+            Begin New Workout
+          </button>
+          <div id="endWorkout"></div>
+        </div>
+      </div>
+      
       <br />
       <table class="ui celled table" id="currentWorkoutTable">
         <thead>

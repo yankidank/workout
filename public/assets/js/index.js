@@ -1,15 +1,68 @@
 // const year = moment().format('YYYY');
 // const dayOfYear = moment().dayOfYear();
-// const momentTimer = moment("2020-05-04T16:47:11-07:00").fromNow(); // Store and get the time for each workout
-// $("#momentTimer").html('started '+momentTimer);
+
 var workoutId
+
+async function exerciseTable(id){
+  // GET exercise data
+  var ajaxExercises = await $.ajax({
+    url: "api/exercise/"+id,
+    method: "GET"
+  }).then(function(response) {
+    // Return the measurements
+    const measurements = response.measurements[0];
+    // Key/value measurements saved to different arrays
+    const keyArray = [];
+    const valueArray = [];
+    for(p in measurements) {
+      keyArray.push(p)
+      valueArray.push(measurements[p])
+    }
+    var rowSpan = keyArray.length; 
+    var newExercise = '';
+
+    for (let index = 0; index < keyArray.length; index++) {
+      const key = keyArray[index];
+      const value = valueArray[index];
+      if (index === 0){
+        // First measurement
+        newExercise += `<tr>
+          <td rowspan="${rowSpan}">${response.name}</td>
+          <td>
+            <div class="ui form">
+              <div class="field inline">
+                <input class="tableUnit" type="number" value="${value}">
+              </div>
+            </div>
+          </td>
+          <td>${key}</td>
+        </tr>`;
+      } else {
+        // Not first measurement
+        newExercise += `<tr>
+          <td>
+            <div class="ui form">
+              <div class="field inline">
+                <input class="tableUnit" type="number" value="${value}">
+              </div>
+            </div>
+          </td>
+          <td>
+            ${key}
+          </td>
+        </tr>`;
+      }
+      //console.log(value+' '+key)
+    }
+    $('#exerciseTableItems').append(newExercise);
+  });
+}
 
 $('.ui.dropdown').dropdown();
 $('select.dropdown').dropdown();
 
 $('#addWorkoutButton').click(function() {
   event.preventDefault();
-  console.log( "addWorkoutButton called." );
   // Ajax POST to save Workout
   $.ajax("/api/workout/", {
     type: "POST"
@@ -111,10 +164,14 @@ $(document).ready(async function() {
     url: "api/workout/",
     method: "GET"
   }).then(function(response) {
+    const measurements = response[0].exercises;
+    for (let i = 0; i < measurements.length; i++) {
+      // for each exercise
+      exerciseTable(measurements[i])
+    }
     return response;
   })
   //console.log(workoutResponse[0]._id)
-
   // Return routines
   $.ajax({
     url: "api/routine",
@@ -145,82 +202,26 @@ $(document).ready(async function() {
   // Add exercises to workout
   $("#addExerciseSelect").change(function() {
     var exerciseId = $( "#addExerciseSelect option:selected" ).data().id;
-    //console.log(workoutResponse[0]._id)
     const workoutData = workoutResponse[0];
     const exercisesList = workoutData.exercises
     exercisesList.push(exerciseId);
     const exerciseData = {_id: workoutResponse[0]._id,  exercises: exercisesList};
-    console.log(exerciseData)
-
     // POST exercise to workout
     $.ajax("/api/workout/"+workoutResponse[0]._id, {
       type: "PUT",
       data: exerciseData
     }).then(
       function() {
-        console.log(`Added ${exerciseId} to ${workoutResponse[0]._id} `);
-        // Reload the page
-        location.reload();
+        console.log(`Added ${exerciseId} to ${workoutResponse[0]._id}`);
+        //location.reload();
       }
     );
-    // GET exercise data
-    $.ajax({
-      url: "api/exercise/"+exerciseId,
-      method: "GET"
-    }).then(function(response) {
-      // Return the measurements
-      const measurements = response.measurements[0];
-      // Key/value measurements saved to different arrays
-      const keyArray = [];
-      const valueArray = [];
-      for(p in measurements) {
-        keyArray.push(p)
-        valueArray.push(measurements[p])
-      }
-      //console.table(keyArray)
-      //console.table(valueArray)
-      var rowSpan = keyArray.length; 
-      var newExercise = '';
-
-      for (let index = 0; index < keyArray.length; index++) {
-        const key = keyArray[index];
-        const value = valueArray[index];
-        if (index === 0){
-          // First measurement
-          newExercise += `<tr>
-            <td rowspan="${rowSpan}">${response.name}</td>
-            <td>
-              <div class="ui form">
-                <div class="field inline">
-                  <input class="tableUnit" type="number" value="${value}">
-                </div>
-              </div>
-            </td>
-            <td>${key}</td>
-          </tr>`;
-        } else {
-          // Not first measurement
-          newExercise += `<tr>
-            <td>
-              <div class="ui form">
-                <div class="field inline">
-                  <input class="tableUnit" type="number" value="${value}">
-                </div>
-              </div>
-            </td>
-            <td>
-              ${key}
-            </td>
-          </tr>`;
-        }
-        console.log(value+' '+key)
-      }
-      $('#exerciseTableItems').append(newExercise);
-    });
-  })
-
+    exerciseTable(exerciseId);
+  });
   // Add button to end workout
   if(!workoutResponse[0].date_end){
+    const momentTimer = moment(workoutResponse[0].start_time).fromNow(); // Store and get the time for each workout
+    $("#momentTimer").html('Began '+momentTimer);
     var endButton = `<button class="ui labeled icon red button right floated" id="endWorkoutButton" type="submit">
         <i class="icon stopwatch"></i>
         End Workout
@@ -229,15 +230,17 @@ $(document).ready(async function() {
   }
   $('#endWorkoutButton').click(function() {
     event.preventDefault();
+    $("#momentTimer").toggleClass('hidden');
     var endData = {_id: workoutResponse[0]._id, date_end: new Date(Date.now()) };
     $.ajax("/api/workout/"+workoutResponse[0]._id, {
       type: "PUT",
       data: endData
     }).then(
       function() {
-        location.reload();
+        //location.reload();
       }
     );
+    $('#endWorkoutButton').toggleClass('disabled')
   })
 
 });

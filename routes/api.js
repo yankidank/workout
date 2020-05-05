@@ -3,17 +3,6 @@ const Exercise = require("../models/exercise.js");
 const Routine = require("../models/routine.js");
 const Workout = require("../models/workout.js");
 
-/* 
-ROUTES: 
-  GET workouts    // Previous workout
-  GET workouts/:id// Returns sepcific workout
-  POST exercise   // Add new
-  PUT exercise/:id // Modify
-  POST routine    // Add new
-  PUT routine/:id // Modify
-                  // When a routine is modified, create a clone and switch to it 
-*/
-
 router.post("/api/exercise", ({ body }, res) => {
   Exercise.create(body)
     .then(dbTransaction => {

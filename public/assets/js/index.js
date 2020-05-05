@@ -118,6 +118,36 @@ $( "#routineSelect" ).change(function() {
   console.log($( "#routineSelect option:selected" ).val())
 })
 
+// On page load
+$(document).ready(function() {
+  // Return routines
+  $.ajax({
+    url: "api/routine",
+    method: "GET"
+  }).then(function(response) {
+    console.log(response);
+    response.forEach(element => {
+      console.log(element.name)
+      var content = `<option data-id="${element._id}" value="${element._id}">${element.name}</option>`;
+      $("#addRoutineSelect").append(content);
+    });
+  });
+  // Return Exercises
+  $.ajax({
+    url: "api/exercise",
+    method: "GET"
+  }).then(function(response) {
+    console.log(response);
+    response.forEach(element => {
+      console.log(element.name)
+      var content = `<option data-id="${element._id}" value="${element._id}">${element.name}</option>`;
+      $("#addExerciseSelect").append(content);
+    });
+  });
+});
+
+
+
 // Create a new workout, or continue last workout.
 
 // Add exercises to a previous workout plan.

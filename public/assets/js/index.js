@@ -184,7 +184,7 @@ $(document).ready(async function() {
     });
   });
 
-  // Return exercises when selecting routine
+  // Add exercises from routine to workout
   $("#addRoutineSelect").change(async function() {
     var routineId = $("#addRoutineSelect option:selected").data().id;
     await $.ajax({
@@ -227,7 +227,7 @@ $(document).ready(async function() {
       //console.log(element.name)
       var content = `<option data-id="${element._id}" value="${element._id}">${element.name}</option>`;
       $("#addExerciseSelect").append(content);
-      $("#newWorkoutExercises").append(content);
+      $("#newExercises").append(content);
     });
   });
   // Add exercises to workout
@@ -272,4 +272,49 @@ $(document).ready(async function() {
     $('#endWorkoutButton').toggleClass('disabled')
   })
 
+  // Edit which exercises are attached to routines
+  $("#routineSelected").change(async function() {
+    var routineId = $("#routineSelected option:selected").data().id;
+    await $.ajax({
+      url: "api/routine/"+routineId,
+      method: "GET"
+    }).then(async function(res) {
+      for (let i = 0; i < res.exercises.length; i++) {
+        await $.ajax({
+          url: "api/exercise/"+res.exercises[i],
+          method: "GET"
+        }).then(async function(response) {
+          // On Edit Routine dropdown change
+          // Append routine exercises to search input area
+          //$('#newExercises').append(`<option value="${response._id}" data-value="${response._id}">${response.name}</option>`);
+          console.log(response.name)
+          $(`<a class="ui label transition exerciseElement visible" data-value="${response._id}" style="display: inline-block !important;"> ${[response.name]}<i class="delete icon"></i></a>`).insertAfter("#routineExercises div i.dropdown");
+          //$('#routineExercises div i').append(`<a class="ui label transition visible" data-value="${response._id}" style="display: inline-block !important;">${response.name}<i class="delete icon"></i></a>`);
+          // Save exercise to routine
+
+          // When removed from search, remove from routine
+
+/*    
+          var unitId = $(".newExerciseUnit").data();
+
+          const exerciseId = res.exercises[i];
+          const workoutData = workoutResponse[0];
+          const exercisesList = workoutData.exercises
+          exercisesList.push(exerciseId);
+          const exerciseData = {_id: workoutData._id,  exercises: exercisesList};
+           */
+          
+          /* await $.ajax("/api/routine/"+workoutData._id, {
+            type: "PUT",
+            data: exerciseData
+          }).then(
+            function() {
+              //location.reload();
+            }
+          ); */
+        })
+      }
+    })
+  })
+// End on page load
 });

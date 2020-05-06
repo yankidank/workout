@@ -1,14 +1,17 @@
 var workoutId
-async function saveExercise(routine, exercise){
+
+async function removeRoutineExercise(routine, exercise){
+  const exerciseData = {exercises: exercise};
   var ajaxRoutineStore = await $.ajax({
     url: "api/routine/"+routine,
-    method: "PUT"
+    method: "DELETE",
+    data: exerciseData
   }).then(function(response) {
-    // Return the measurements
-    const measurements = response.measurements[0];
+    console.table(response)
+    console.log(`Removed Exercise ${exercise} from Routine`)
   });
-
 }
+
 async function exerciseTable(id){
   // GET exercise data
   var ajaxExercises = await $.ajax({
@@ -146,10 +149,10 @@ $('#addExerciseButton').click(function() {
 $('#routineCreate').click(function() {
   event.preventDefault();
   var newRoutine = $('#routineNew').val();
-  console.log(newRoutine)
+  //console.log(newRoutine)
   var formObject = {};
   formObject.name = newRoutine;
-  console.log(formObject)
+  //console.log(formObject)
   // POST New Routine
   $.ajax("/api/routine", {
     type: "POST",
@@ -280,7 +283,9 @@ $(document).ready(async function() {
     );
     $('#endWorkoutButton').toggleClass('disabled')
   })
-
+  $("#routineEdit").change(function() {
+    $("#routineExercises .multiple a").remove();
+  })
   // Add Exercises to Routines
   $("#routineSelected").change(async function() {
     var routineId = $("#routineSelected option:selected").data().value;
@@ -297,9 +302,8 @@ $(document).ready(async function() {
           // Append routine exercises to search input area
           $(`<a class="ui label transition exerciseElement visible" data-value="${response._id}" style="display: inline-block !important;"> ${[response.name]}<i class="delete icon"></i></a>`).insertAfter("#routineExercises div i.dropdown");
           // Save exercise to routine
-          saveExercise(routineId, response._id)
+          // saveExercise(routineId, response._id)
           // When removed from search, remove from routine
-
 /*    
           var unitId = $(".newExerciseUnit").data();
 
@@ -322,5 +326,12 @@ $(document).ready(async function() {
       }
     })
   })
+
+  // Clicking a routine from the Edit Routine Exercises input
+  $("#routineExercises .multiple a").click(function() {
+    console.log(this)
+    //removeRoutineExercise(routineId, exerciseId)
+  })
+
 // End on page load
 });

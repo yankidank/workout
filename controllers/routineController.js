@@ -33,5 +33,12 @@ module.exports = {
       .then(dbModel => dbModel.remove())
       .then(dbModel => res.json(dbModel))
       .catch(err => res.status(422).json(err));
+  },
+  exercise: function(req, res) {
+    db.Routine
+      .findById({ _id: req.params.id })
+      .then(dbModel => dbModel.remove({exercises: req.body}))
+      .then(dbModel => res.json(dbModel))
+      .catch(err => res.status(422).json(err));
   }
 };

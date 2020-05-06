@@ -1,6 +1,3 @@
-// const year = moment().format('YYYY');
-// const dayOfYear = moment().dayOfYear();
-
 var workoutId
 
 async function exerciseTable(id){
@@ -56,6 +53,7 @@ async function exerciseTable(id){
     }
     $('#exerciseTableItems').append(newExercise);
   });
+
 }
 
 $('.ui.dropdown').dropdown();
@@ -68,7 +66,7 @@ $('#addWorkoutButton').click(function() {
     type: "POST"
   }).then(
     function() {
-      console.log("Created New Exercise!");
+      console.log("Created New Exercise");
       // Reload the page to get the updated list
       location.reload();
     }
@@ -103,7 +101,6 @@ $('#addFieldButton').click(function() {
 
 $('#addExerciseButton').click(function() {
   event.preventDefault();
-  //console.log( "addExerciseButton called." );
   var formObject = {};
   var exerciseName = $('#newExerciseNameInput').val();
   // Arrays of Form and Unit values
@@ -144,13 +141,30 @@ $('#addExerciseButton').click(function() {
   }
 });
 
+
+$('#routineCreate').click(function() {
+  event.preventDefault();
+  var newRoutine = $('#routineNew').val();
+  console.log(newRoutine)
+  var formObject = {};
+  formObject.name = newRoutine;
+  console.log(formObject)
+  // POST New Routine
+  $.ajax("/api/routine", {
+    type: "POST",
+    data: formObject
+  }).then(
+    function() {
+      console.log("Created New Routine");
+      // Reload the page to get the updated list
+      location.reload();
+    }
+  );
+})
+
 $(".exerciseButton").click(function() {
   event.preventDefault();
 });
-
-$("#addRoutineSelect").change(function() {
-    console.log($( "#addRoutineSelect option:selected" ).data())
-})
 
 // Customize Routines
 $( "#routineSelect" ).change(function() {
@@ -163,11 +177,13 @@ $(document).ready(async function() {
   var workoutResponse = await $.ajax({
     url: "api/workout/",
     method: "GET"
-  }).then(function(response) {
+  }).then(async function(response) {
     const measurements = response[0].exercises;
     for (let i = 0; i < measurements.length; i++) {
       // for each exercise
-      exerciseTable(measurements[i])
+      const makeTable = exerciseTable(measurements[i]);
+      // Just like await Promise.all([a, b])
+      await makeTable;
     }
     return response;
   })
@@ -177,17 +193,37 @@ $(document).ready(async function() {
     url: "api/routine",
     method: "GET"
   }).then(function(response) {
-    //console.log(response);
     response.forEach(element => {
-      //console.log(element.name)
       var content = `<option data-id="${element._id}" value="${element._id}">${element.name}</option>`;
       $("#addRoutineSelect").append(content);
       $("#routineSelected").append(content);
     });
   });
-
+/* 
+  // Return exercises when selecting routine
+  $("#addRoutineSelect").change(async function() {
+    var routineId = $("#addRoutineSelect option:selected").data().id;
+    await $.ajax({
+      url: "api/routine/"+routineId,
+      method: "GET"
+    }).then(async function(response) {
+      console.log(response)
+      for (let i = 0; i < response.exercises.length; i++) {
+        await $.ajax({
+          url: "api/exercise/"+response[i]._id,
+          method: "GET"
+        }).then(async function(response) {
+          response._id
+          exerciseTable(response._id);
+        })
+        //exerciseTable(response.exercises[i]._id);
+        //location.reload();
+      }
+    })
+  })
+ */
   // Return Exercises
-  $.ajax({
+  await $.ajax({
     url: "api/exercise",
     method: "GET"
   }).then(function(response) {
@@ -212,7 +248,6 @@ $(document).ready(async function() {
       data: exerciseData
     }).then(
       function() {
-        console.log(`Added ${exerciseId} to ${workoutResponse[0]._id}`);
         //location.reload();
       }
     );
@@ -220,8 +255,8 @@ $(document).ready(async function() {
   });
   // Add button to end workout
   if(!workoutResponse[0].date_end){
-    const momentTimer = moment(workoutResponse[0].start_time).fromNow(); // Store and get the time for each workout
-    $("#momentTimer").html('Began '+momentTimer);
+    var date_start = workoutResponse[0].date_start;
+    //$("#timer").html(date_start);
     var endButton = `<button class="ui labeled icon red button right floated" id="endWorkoutButton" type="submit">
         <i class="icon stopwatch"></i>
         End Workout
@@ -230,7 +265,7 @@ $(document).ready(async function() {
   }
   $('#endWorkoutButton').click(function() {
     event.preventDefault();
-    $("#momentTimer").toggleClass('hidden');
+    $("#timer").toggleClass('hidden');
     var endData = {_id: workoutResponse[0]._id, date_end: new Date(Date.now()) };
     $.ajax("/api/workout/"+workoutResponse[0]._id, {
       type: "PUT",

@@ -30,15 +30,17 @@ table tbody tr td, table thead tr th {
   padding-top: 6px;
   margin-top: 9px !important;
 }
-#manageRoutines {
-  opacity:0.3;
-}
-#momentTimer{
+#timer{
   float:left;
-  text-transform: capitalize;
-  font-size: 0.85rem;
   font-weight: 500;
 }
 .hidden {
   display:none;
+}
+#manageRoutines .ui.segment {
+  margin:0;
+  padding:0;
+}
+#manageRoutines .ui.placeholder.segment {
+  background:none;
 }

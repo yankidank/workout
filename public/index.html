@@ -15,7 +15,7 @@
     <div class="ui text container">
       <div class="two fields">
         <div class="field">
-          <h4 class="ui header" id="momentTimer"></h4>
+          <h4 class="ui header" id="timer"></h4>
         </div>
         <div class="field">
           <button class="ui labeled icon primary button right floated" id="addWorkoutButton" type="submit">
@@ -85,7 +85,7 @@
               </div>
             </div>
             <div id="insertFields"></div>
-            <button class="ui labeled icon button right floated" id="addExerciseButton" type="submit">
+            <button class="ui labeled icon primary button right floated" id="addExerciseButton" type="submit">
               <i class="icon save"></i>
               Save Exercise
             </button>  
@@ -108,31 +108,50 @@
         Manage Routines
       </h4>
       <div class="ui bottom attached segment">
-        <form class="ui form" id="addWorkoutForm">
-          <div class="two fields">
-            <div class="disabled field">
-              <label>Routine</label>
-              <select class="ui search fluid dropdown" id="routineSelected">
-                <option value="">Search or Select</option>
-              </select>
+        <div class="ui placeholder segment">
+          <div class="ui two column very relaxed stackable grid">
+            <div class="column">
+              <div class="ui form">
+                <form class="ui form" id="addRoutineForm">
+                  <div class="field">
+                    <label>New Routine</label>
+                    <div class="ui left icon input">
+                      <input type="text" id="routineNew" placeholder="Name">
+                      <i class="add icon"></i>
+                    </div>
+                  </div>
+                  <div class="ui blue submit button" id="routineCreate">Create Routine</div>
+                </form>
+              </div>
             </div>
-            <div class="disabled field">
-              <label>Exercises</label>
-              <select class="ui multiple search fluid dropdown" id="newWorkoutExercises">
-                <option value="">Excercises</option>
-              </select>
+            <div class="middle aligned column">
+              <form class="ui form" id="addWorkoutForm">
+                <div class="field">
+                  <label>Edit Routine</label>
+                  <select class="ui search fluid dropdown" id="routineSelected">
+                    <option value="">Select Routine</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label>Exercises</label>
+                  <select class="ui multiple search fluid dropdown" id="newWorkoutExercises">
+                    <option value="">Add Excercises</option>
+                  </select>
+                </div>
+              </form>
             </div>
           </div>
-        </form>
+          <div class="ui vertical divider">
+            Or
+          </div>
+        </div>
       </div>
     </div>
 
     <br /><br />
 
-
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.0/jquery.min.js"></script>
     <script src="assets/semanticui/semantic.min.js"></script>
-    <script src="assets/js/moment.min.js"></script>
     <script src="assets/js/index.js"></script>
   </body>
 </html>

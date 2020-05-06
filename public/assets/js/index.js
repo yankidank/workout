@@ -199,7 +199,7 @@ $(document).ready(async function() {
       $("#routineSelected").append(content);
     });
   });
-/* 
+
   // Return exercises when selecting routine
   $("#addRoutineSelect").change(async function() {
     var routineId = $("#addRoutineSelect option:selected").data().id;
@@ -221,7 +221,7 @@ $(document).ready(async function() {
       }
     })
   })
- */
+ 
   // Return Exercises
   await $.ajax({
     url: "api/exercise",
@@ -257,14 +257,13 @@ $(document).ready(async function() {
   if(!workoutResponse[0].date_end){
     var date_start = workoutResponse[0].date_start;
     //$("#timer").html(date_start);
-    var endButton = `<button class="ui labeled icon red button right floated" id="endWorkoutButton" type="submit">
-        <i class="icon stopwatch"></i>
-        End Workout
-      </button>`;
-    $("#endWorkout").append(endButton);
+    $('#addWorkoutButton').toggleClass('hidden');
+    $('#endWorkoutButton').toggleClass('hidden');
   }
   $('#endWorkoutButton').click(function() {
     event.preventDefault();
+    $('#addWorkoutButton').toggleClass('hidden');
+    $('#endWorkoutButton').toggleClass('hidden');
     $("#timer").toggleClass('hidden');
     var endData = {_id: workoutResponse[0]._id, date_end: new Date(Date.now()) };
     $.ajax("/api/workout/"+workoutResponse[0]._id, {

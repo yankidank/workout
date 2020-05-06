@@ -35,7 +35,7 @@ table tbody tr td, table thead tr th {
   font-weight: 500;
 }
 .hidden {
-  display:none;
+  display:none !important;
 }
 #manageRoutines .ui.segment {
   margin:0;

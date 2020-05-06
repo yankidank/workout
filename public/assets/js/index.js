@@ -1,5 +1,14 @@
 var workoutId
+async function saveExercise(routine, exercise){
+  var ajaxRoutineStore = await $.ajax({
+    url: "api/routine/"+routine,
+    method: "PUT"
+  }).then(function(response) {
+    // Return the measurements
+    const measurements = response.measurements[0];
+  });
 
+}
 async function exerciseTable(id){
   // GET exercise data
   var ajaxExercises = await $.ajax({
@@ -53,7 +62,6 @@ async function exerciseTable(id){
     }
     $('#exerciseTableItems').append(newExercise);
   });
-
 }
 
 $('.ui.dropdown').dropdown();
@@ -82,11 +90,11 @@ $('#addFieldButton').click(function() {
   <div class="six wide field"></div>
   <div class="six wide field borderTop">
     <label>Unit</label>
-    <input type="number" class="newExerciseUnit" data-id="${unitId}" placeholder="# of lbs, laps, miles">
+    <input type="number" class="newExerciseUnit" data-value="${unitId}" placeholder="# of lbs, laps, miles">
   </div>
   <div class="four wide field borderTop">
     <label>Form</label>
-    <input type="text" class="newExerciseForm" data-id="${unitId}" placeholder="Reps, laps, miles">
+    <input type="text" class="newExerciseForm" data-value="${unitId}" placeholder="Reps, laps, miles">
   </div>
 </div>`;
   $('#insertFields').append(moreFields);
@@ -178,7 +186,7 @@ $(document).ready(async function() {
     method: "GET"
   }).then(function(response) {
     response.forEach(element => {
-      var content = `<option data-id="${element._id}" value="${element._id}">${element.name}</option>`;
+      var content = `<option data-value="${element._id}" value="${element._id}">${element.name}</option>`;
       $("#addRoutineSelect").append(content);
       $("#routineSelected").append(content);
     });
@@ -186,7 +194,7 @@ $(document).ready(async function() {
 
   // Add exercises from routine to workout
   $("#addRoutineSelect").change(async function() {
-    var routineId = $("#addRoutineSelect option:selected").data().id;
+    var routineId = $("#addRoutineSelect option:selected").data().value;
     await $.ajax({
       url: "api/routine/"+routineId,
       method: "GET"
@@ -217,7 +225,7 @@ $(document).ready(async function() {
     })
   })
  
-  // Return Exercises
+  // Return Exercises for Form Options
   await $.ajax({
     url: "api/exercise",
     method: "GET"
@@ -225,14 +233,15 @@ $(document).ready(async function() {
     //console.log(response);
     response.forEach(element => {
       //console.log(element.name)
-      var content = `<option data-id="${element._id}" value="${element._id}">${element.name}</option>`;
+      var content = `<option data-value="${element._id}" value="${element._id}">${element.name}</option>`;
       $("#addExerciseSelect").append(content);
       $("#newExercises").append(content);
     });
   });
-  // Add exercises to workout
+
+  // Add exercises to workout from dropdown
   $("#addExerciseSelect").change(function() {
-    var exerciseId = $( "#addExerciseSelect option:selected" ).data().id;
+    var exerciseId = $( "#addExerciseSelect option:selected" ).data().value;
     const workoutData = workoutResponse[0];
     const exercisesList = workoutData.exercises
     exercisesList.push(exerciseId);
@@ -272,9 +281,9 @@ $(document).ready(async function() {
     $('#endWorkoutButton').toggleClass('disabled')
   })
 
-  // Edit which exercises are attached to routines
+  // Add Exercises to Routines
   $("#routineSelected").change(async function() {
-    var routineId = $("#routineSelected option:selected").data().id;
+    var routineId = $("#routineSelected option:selected").data().value;
     await $.ajax({
       url: "api/routine/"+routineId,
       method: "GET"
@@ -286,12 +295,9 @@ $(document).ready(async function() {
         }).then(async function(response) {
           // On Edit Routine dropdown change
           // Append routine exercises to search input area
-          //$('#newExercises').append(`<option value="${response._id}" data-value="${response._id}">${response.name}</option>`);
-          console.log(response.name)
           $(`<a class="ui label transition exerciseElement visible" data-value="${response._id}" style="display: inline-block !important;"> ${[response.name]}<i class="delete icon"></i></a>`).insertAfter("#routineExercises div i.dropdown");
-          //$('#routineExercises div i').append(`<a class="ui label transition visible" data-value="${response._id}" style="display: inline-block !important;">${response.name}<i class="delete icon"></i></a>`);
           // Save exercise to routine
-
+          saveExercise(routineId, response._id)
           // When removed from search, remove from routine
 
 /*    

@@ -44,3 +44,15 @@ table tbody tr td, table thead tr th {
 #manageRoutines .ui.placeholder.segment {
   background:none;
 }
+#addWorkoutForm, #addRoutineForm {
+  margin:15px 0;
+}
+
+@media only screen and (max-width: 767px) {
+  #manageRoutines div div .divider {
+    display:none;
+  }
+  #addExerciseButton, #addFieldButton {
+    margin-top:10px;
+  }
+}

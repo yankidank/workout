@@ -66,18 +66,11 @@ $('#addWorkoutButton').click(function() {
     type: "POST"
   }).then(
     function() {
-      console.log("Created New Exercise");
+      console.log("Created New Workout");
       // Reload the page to get the updated list
       location.reload();
     }
   );
-});
-
-$('#updateWorkoutButton').click(function() {
-  event.preventDefault();
-  console.log( "updateWorkoutButton called." );
-  $('#updateWorkoutButton .icon').toggleClass('check');
-  setTimeout(function(){$('#updateWorkoutButton .icon').toggleClass('check')}, 1200)
 });
 
 $('#addFieldButton').click(function() {
@@ -162,15 +155,6 @@ $('#routineCreate').click(function() {
   );
 })
 
-$(".exerciseButton").click(function() {
-  event.preventDefault();
-});
-
-// Customize Routines
-$( "#routineSelect" ).change(function() {
-  console.log($( "#routineSelect option:selected" ).val())
-})
-
 // On page load
 $(document).ready(async function() {
   // Get workout data
@@ -206,14 +190,25 @@ $(document).ready(async function() {
     await $.ajax({
       url: "api/routine/"+routineId,
       method: "GET"
-    }).then(async function(response) {
-      console.log(response)
-      for (let i = 0; i < response.exercises.length; i++) {
+    }).then(async function(res) {
+      for (let i = 0; i < res.exercises.length; i++) {
         await $.ajax({
-          url: "api/exercise/"+response[i]._id,
+          url: "api/exercise/"+res.exercises[i],
           method: "GET"
         }).then(async function(response) {
-          response._id
+          const exerciseId = res.exercises[i];
+          const workoutData = workoutResponse[0];
+          const exercisesList = workoutData.exercises
+          exercisesList.push(exerciseId);
+          const exerciseData = {_id: workoutData._id,  exercises: exercisesList};
+          await $.ajax("/api/workout/"+workoutData._id, {
+            type: "PUT",
+            data: exerciseData
+          }).then(
+            function() {
+              //location.reload();
+            }
+          );
           exerciseTable(response._id);
         })
         //exerciseTable(response.exercises[i]._id);

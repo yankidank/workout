@@ -8,23 +8,51 @@ mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost/workout", {
 const routineSeed = [
   {
     name: "Cardio",
-    exercises: [1,2,3,4,5,17,18]
+    exercises: [ 
+        "5eb1d142be5b8a06f895e765", 
+        "5eb1d142be5b8a06f895e766", 
+        "5eb1d142be5b8a06f895e768", 
+        "5eb1d142be5b8a06f895e769", 
+        "5eb1d142be5b8a06f895e775", 
+        "5eb1d142be5b8a06f895e776"
+    ]
   },
   {
     name: "Arms",
-    exercises: [6,7,8,9,10,11]
+    exercises: [
+		"5eb1d142be5b8a06f895e76f",
+		"5eb1d142be5b8a06f895e76e",
+		"5eb1d142be5b8a06f895e76d",
+		"5eb1d142be5b8a06f895e76c",
+		"5eb1d142be5b8a06f895e76b",
+		"5eb1d142be5b8a06f895e76a"
+	]
   },
   {
     name: "Legs",
-    exercises: [1,3,13,16]
+    exercises: [
+		"5eb1d142be5b8a06f895e767",
+		"5eb1d142be5b8a06f895e771",
+		"5eb1d142be5b8a06f895e773",
+		"5eb1d142be5b8a06f895e774"
+	]
   },
   {
     name: "Abs",
-    exercises: [9,12]
+    exercises: [
+		"5eb1d142be5b8a06f895e770",
+		"5eb1d142be5b8a06f895e772"
+	]
   },
   {
     name: "Shoulders",
-    exercises: [6,7,9,10]
+    exercises: [
+		"5eb1d142be5b8a06f895e76f",
+		"5eb1d142be5b8a06f895e76e",
+		"5eb1d142be5b8a06f895e76d",
+		"5eb1d142be5b8a06f895e76b",
+		"5eb1d142be5b8a06f895e76a"
+	]
   }
 ];
 

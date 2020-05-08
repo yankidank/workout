@@ -19,51 +19,65 @@ async function exerciseTable(id){
     method: "GET"
   }).then(function(response) {
     // Return the measurements
-    const measurements = response.measurements[0];
-    // Key/value measurements saved to different arrays
-    const keyArray = [];
-    const valueArray = [];
-    for(p in measurements) {
-      keyArray.push(p)
-      valueArray.push(measurements[p])
-    }
-    var rowSpan = keyArray.length; 
-    var newExercise = '';
-
-    for (let index = 0; index < keyArray.length; index++) {
-      const key = keyArray[index];
-      const value = valueArray[index];
-      if (index === 0){
-        // First measurement
-        newExercise += `<tr>
-          <td rowspan="${rowSpan}">${response.name}</td>
-          <td>
-            <div class="ui form">
-              <div class="field inline">
-                <input class="tableUnit" type="number" value="${value}">
-              </div>
-            </div>
-          </td>
-          <td>${key}</td>
-        </tr>`;
-      } else {
-        // Not first measurement
-        newExercise += `<tr>
-          <td>
-            <div class="ui form">
-              <div class="field inline">
-                <input class="tableUnit" type="number" value="${value}">
-              </div>
-            </div>
-          </td>
-          <td>
-            ${key}
-          </td>
-        </tr>`;
+    if (response.measurements[0]){ // Heroku troubleshooting
+      const measurements = response.measurements[0];
+      // Key/value measurements saved to different arrays
+      const keyArray = [];
+      const valueArray = [];
+      for(p in measurements) {
+        keyArray.push(p)
+        valueArray.push(measurements[p])
       }
-      //console.log(value+' '+key)
+      var rowSpan = keyArray.length; 
+      var newExercise = '';
+
+      for (let index = 0; index < keyArray.length; index++) {
+        const key = keyArray[index];
+        const value = valueArray[index];
+        if (index === 0){
+          // First measurement
+          newExercise += `<tr>
+            <!-- <td rowspan="${rowSpan}">
+              <a href="#${response._id}" title="Remove Exercise"><i class="icon red x tableicon"></i></a>
+            </td> -->
+            <td rowspan="${rowSpan}">
+              ${response.name}
+            </td>
+            <td>
+              <div class="ui form">
+                <div class="field inline">
+                  <!-- <input class="tableUnit" type="number" value="${value}"> -->
+                  ${value}
+                </div>
+              </div>
+            </td>
+            <td>${key}</td>
+            <!--
+            <td rowspan="${rowSpan}">
+              <a href="#" title="Mark as Complete"><i class="icon green check tableicon"></i></a>
+            </td>
+            -->
+          </tr>`;
+        } else {
+          // Not first measurement
+          newExercise += `<tr>
+            <td>
+              <div class="ui form">
+                <div class="field inline">
+                  <!-- <input class="tableUnit" type="number" value="${value}"> -->
+                  ${value}
+                </div>
+              </div>
+            </td>
+            <td>
+              ${key}
+            </td>
+          </tr>`;
+        }
+        //console.log(value+' '+key)
+      }
+      $('#exerciseTableItems').append(newExercise);
     }
-    $('#exerciseTableItems').append(newExercise);
   });
 }
 
@@ -320,7 +334,6 @@ $(document).ready(async function() {
 });
 
 async function saveExercise(routine, exercise){
-  //console.log('Add Exercise to Routine')
   var exerciseArray = await routineExerciseArray(routine);
   exerciseArray.push(exercise);
   const exerciseData = {exercises: exerciseArray};

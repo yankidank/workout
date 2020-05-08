@@ -47,6 +47,10 @@ table tbody tr td, table thead tr th {
 #addWorkoutForm, #addRoutineForm {
   margin:15px 0;
 }
+.tableicon {
+  display:inline !important;
+  font-size:1.4rem !important;
+}
 
 @media only screen and (max-width: 767px) {
   #manageRoutines div div .divider {

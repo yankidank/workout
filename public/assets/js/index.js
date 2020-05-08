@@ -186,6 +186,16 @@ $(document).ready(async function() {
     url: "api/workout/",
     method: "GET"
   }).then(async function(response) {
+    if(!response[0]){
+      $.ajax("/api/workout/", {
+        type: "POST"
+      }).then(
+        function() {
+          console.log("No workouts found. Creating Workout");
+          location.reload();
+        }
+      );
+    }
     const measurements = response[0].exercises;
     for (let i = 0; i < measurements.length; i++) {
       // for each exercise

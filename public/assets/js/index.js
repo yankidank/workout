@@ -19,7 +19,7 @@ async function exerciseTable(id){
     method: "GET"
   }).then(function(response) {
     // Return the measurements
-    if (response.measurements[0]){ // Heroku troubleshooting
+    if (response.measurements[0]){
       const measurements = response.measurements[0];
       // Key/value measurements saved to different arrays
       const keyArray = [];

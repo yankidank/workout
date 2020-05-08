@@ -145,7 +145,6 @@ $('#addExerciseButton').click(function() {
   }
 });
 
-
 $('#routineCreate').click(function() {
   event.preventDefault();
   var newRoutine = $('#routineNew').val();
@@ -286,8 +285,10 @@ $(document).ready(async function() {
   $("#routineEdit").change(function() {
     $("#routineExercises .multiple a").remove();
   })
-  // Add Exercises to Routines
+  // Return Exercises in Routines
   $("#routineSelected").change(async function() {
+    // Enable exercise input
+    $('#routineExercises .multiple').removeClass('disabled')
     var routineId = $("#routineSelected option:selected").data().value;
     await $.ajax({
       url: "api/routine/"+routineId,
@@ -299,39 +300,62 @@ $(document).ready(async function() {
           method: "GET"
         }).then(async function(response) {
           // On Edit Routine dropdown change
-          // Append routine exercises to search input area
+          // add exercises to search input
           $(`<a class="ui label transition exerciseElement visible" data-value="${response._id}" style="display: inline-block !important;"> ${[response.name]}<i class="delete icon"></i></a>`).insertAfter("#routineExercises div i.dropdown");
-          // Save exercise to routine
-          // saveExercise(routineId, response._id)
-          // When removed from search, remove from routine
-/*    
-          var unitId = $(".newExerciseUnit").data();
-
-          const exerciseId = res.exercises[i];
-          const workoutData = workoutResponse[0];
-          const exercisesList = workoutData.exercises
-          exercisesList.push(exerciseId);
-          const exerciseData = {_id: workoutData._id,  exercises: exercisesList};
-           */
-          
-          /* await $.ajax("/api/routine/"+workoutData._id, {
-            type: "PUT",
-            data: exerciseData
-          }).then(
-            function() {
-              //location.reload();
-            }
-          ); */
         })
       }
     })
   })
 
-  // Clicking a routine from the Edit Routine Exercises input
-  $("#routineExercises .multiple a").click(function() {
-    console.log(this)
-    //removeRoutineExercise(routineId, exerciseId)
+  // Save exercise to routine
+  $("#routineExercises .multiple .menu .item").click(function(){
+    console.log($(this))
+    var routineId = $("#routineSelected option:selected").data().value;
+    if (routineId){
+      console.log(routineId)
+    }
+    var exerciseId = 'exer'
+    saveExercise(routineId, exerciseId)
   })
 
 // End on page load
 });
+
+function saveExercise(routine, exercise){
+  // Insert ajax here
+  console.log('save to routine')
+}
+
+// Remove Exercise from Routine when clicking in search box
+// Requires edit of semantic.js (for now) around line 5454
+// remove: {
+//  click: function() {
+//    clicklabel(); // Add this line
+async function clickLabel(passThis){
+  var exercise = passThis[0].parentElement.attributes[1].nodeValue;
+  var routine = $("#routineSelected option:selected").data().value;
+  var exerciseArray = await routineExerciseArray(routine)
+    function removeExercise(id) {
+    return id != exercise;
+  }
+  var filteredExercises = exerciseArray.filter(removeExercise)
+  const exerciseData = {exercises: filteredExercises};
+  await $.ajax("/api/routine/"+routine, {
+    type: "PUT",
+    data: exerciseData
+  }).then(
+    function() {
+      console.log('Removed exercise from routine')
+    }
+  );
+}
+
+async function routineExerciseArray(routine){
+  var getRoutine = await $.ajax({
+    url: "api/routine/"+routine,
+    method: "GET"
+  }).then(function(response) {
+    return response.exercises
+  });
+  return getRoutine
+}

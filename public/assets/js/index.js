@@ -309,21 +309,29 @@ $(document).ready(async function() {
 
   // Save exercise to routine
   $("#routineExercises .multiple .menu .item").click(function(){
-    console.log($(this))
     var routineId = $("#routineSelected option:selected").data().value;
     if (routineId){
-      console.log(routineId)
+      var exerciseId = $(this)[0].attributes[1].nodeValue
+      saveExercise(routineId, exerciseId)
     }
-    var exerciseId = 'exer'
-    saveExercise(routineId, exerciseId)
   })
 
 // End on page load
 });
 
-function saveExercise(routine, exercise){
-  // Insert ajax here
-  console.log('save to routine')
+async function saveExercise(routine, exercise){
+  //console.log('Add Exercise to Routine')
+  var exerciseArray = await routineExerciseArray(routine);
+  exerciseArray.push(exercise);
+  const exerciseData = {exercises: exerciseArray};
+  await $.ajax("/api/routine/"+routine, {
+    type: "PUT",
+    data: exerciseData
+  }).then(
+    function() {
+      console.log('Added exercise to routine')
+    }
+  );
 }
 
 // Remove Exercise from Routine when clicking in search box
@@ -335,7 +343,7 @@ async function clickLabel(passThis){
   var exercise = passThis[0].parentElement.attributes[1].nodeValue;
   var routine = $("#routineSelected option:selected").data().value;
   var exerciseArray = await routineExerciseArray(routine)
-    function removeExercise(id) {
+  function removeExercise(id) {
     return id != exercise;
   }
   var filteredExercises = exerciseArray.filter(removeExercise)
